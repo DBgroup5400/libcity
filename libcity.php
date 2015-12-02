@@ -50,7 +50,7 @@ class City extends db{
   *****************************************/
   public function USERID_2_CITY($USR_ID){
     $query = sprintf("SELECT City_ID FROM User_Geo WHERE User_ID = '%s'; ",$USR_ID);
-    $result = $this->_db_throw_query( 'User_Geo', $query );
+    $result = $this->_db_throw_query( 'Users_Geo', $query );
     if(!$result){
       $message  = 'Invalid query: ' . mysqli_error() . "\n";
       $message .= 'Whole query: ' . $query;
@@ -97,6 +97,7 @@ class City extends db{
   $ID  ユーザーID
 *********************************************************/
   public function negibhor_list($ID){
+    $users = array();
     $city =  $this->USERID_2_CITY($ID);
     $neighbor = $this->NEIGHBOR($city);
 
@@ -115,17 +116,16 @@ class City extends db{
       $i++;
     }
 
-    $result  = $this->_db_throw_query( 'User_Geo', $query );
+    $result  = $this->_db_throw_query( 'Users_Geo', $query );
 
     $cnt = 0; // array counter
     while( ($data = mysqli_fetch_array($result) )  != NULL){
-      global  $users;
-      $users[$cnt] = array('ID'=> $data['User_ID'],'POS_X' => $data['Pos_X'], 'POS_Y' => $data['Pos_Y'], 'DIS' => 0); // copy result to array
+      $users[$cnt] = array('ID'=> $data['Users_ID'],'POS_X' => $data['Pos_X'], 'POS_Y' => $data['Pos_Y'], 'DIS' => 0); // copy result to array
       $cnt++;
     }
 
     sprintf($query,"SELECT Pos_X ,Pos_Y FROM Users_Geo.User_Geo WHERE User_ID = %d",$ID);   // get sercher address
-    $result  = $this->_db_throw_query( 'User_Geo', $query );
+    $result  = $this->_db_throw_query( 'Users_Geo', $query );
     $data = mysqli_fetch_array($result);
 
     $user_x = $data['Pos_X'];
@@ -139,10 +139,10 @@ class City extends db{
       $cnt++;
     }
 
-    foreach($users as $key => $row){
-        $DIS[$key] = $row["DIS"];
-    }
-    array_multisort($DIS,SORT_ASC,$users); //sort by distance
+    // foreach($users as $key => $row){
+    //     $DIS[$key] = $row['DIS'];
+    // }
+    // array_multisort($DIS,SORT_ASC,$users); //sort by distance
 
     return $users;
   }
@@ -154,10 +154,10 @@ class City extends db{
   ***************************************************************************/
   public function SerchPrice($round, $ID, $list){
     $users = $this->negibhor_list($ID);
-
-    $query = 0;
-    $i = 0;
-    $result = 0;
+    print_r( $users );
+    // $query = 0;
+    // $i = 0;
+    // $result = 0;
     foreach ($list as &$food){
       $query = NULL;
       foreach($users as &$private){
@@ -170,7 +170,7 @@ class City extends db{
       $sum = 0;
       $num = 0;
 
-      $result = $this->_db_throw_query( 'User_Geo', $query );
+      $result = $this->_db_throw_query( 'Users_Geo', $query );
       while(( $data = mysqli_fetch_array($result) ) != NULL){
         $num += 1;        
         $sum += $data['Price'];     
@@ -178,7 +178,7 @@ class City extends db{
 
       if($num == 0){
         $query = sprintf("SELECT * FROM  UXXXXXX WHERE ID  = '%s'",$food);
-        $result = $this->_db_throw_query( 'User_Geo', $query );
+        $result = $this->_db_throw_query( 'Users_Geo', $query );
         $data = mysqli_fetch_array($result);
         $list[$i] = $data['Price'];
       }else{
