@@ -119,8 +119,8 @@ class City extends db{
     $result  = $this->_db_throw_query( 'Users_Geo', $query );
 
     $cnt = 0; // array counter
-    while( ($data = mysqli_fetch_array($result) )  != NULL){
-      $users[$cnt] = array('ID'=> $data['Users_ID'],'POS_X' => $data['Pos_X'], 'POS_Y' => $data['Pos_Y'], 'DIS' => 0); // copy result to array
+    while( ($data = mysqli_fetch_assoc($result) )  != NULL){
+      $users[$cnt] = array('ID'=> $data['User_ID'],'POS_X' => $data['Pos_X'], 'POS_Y' => $data['Pos_Y'], 'DIS' => 0); // copy result to array
       $cnt++;
     }
 
@@ -134,7 +134,7 @@ class City extends db{
     $cnt = 0;
 
     foreach( $users as &$each){
-      $dist = getPointsDistance( $user_x, $user_y, $each['POS_X'] ,$each['POS_Y']);
+      $dist = $this->getPointsDistance( $user_x, $user_y, $each['POS_X'] ,$each['POS_Y']);
       $each['DIS'] = $dist;
       $cnt++;
     }
