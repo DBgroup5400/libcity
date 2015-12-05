@@ -154,10 +154,11 @@ class City extends db{
   ***************************************************************************/
   public function SerchPrice($round, $ID, $list){
     $users = $this->negibhor_list($ID);
-    print_r( $users );
-    // $query = 0;
-    // $i = 0;
-    // $result = 0;
+    // print_r( $users );
+    
+    $query = 0;
+    $i = 0;
+    $result = 0;
     foreach ($list as &$food){
       $query = NULL;
       foreach($users as &$private){
@@ -170,17 +171,19 @@ class City extends db{
       $sum = 0;
       $num = 0;
 
-      $result = $this->_db_throw_query( 'Users_Geo', $query );
-      while(( $data = mysqli_fetch_array($result) ) != NULL){
-        $num += 1;        
-        $sum += $data['Price'];     
+      $result = ( $query )?( $this->_db_throw_query( 'Users_Geo', $query ) ):( 0 );
+      if( $result != NULL ){
+        while(( $data = mysqli_fetch_assoc($result) ) != NULL){
+          $num += 1;
+          $sum += $data['Price'];
+        }
       }
 
       if($num == 0){
-        $query = sprintf("SELECT * FROM  UXXXXXX WHERE ID  = '%s'",$food);
-        $result = $this->_db_throw_query( 'Users_Geo', $query );
-        $data = mysqli_fetch_array($result);
-        $list[$i] = $data['Price'];
+        $query = sprintf("SELECT * FROM  UXXXXXX WHERE ID = '%s'",$food);
+        $result = $this->_db_throw_query( "Users_Geo", $query );
+        $data = mysqli_fetch_assoc( $result );
+        $list[$i] = $data["Price"];
       }else{
         $list[$i] = $sum / $num;
       } 
