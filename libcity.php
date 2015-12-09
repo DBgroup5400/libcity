@@ -124,7 +124,7 @@ class City extends db{
       $cnt++;
     }
 
-    sprintf($query,"SELECT Pos_X ,Pos_Y FROM Users_Geo.User_Geo WHERE User_ID = %d",$ID);   // get sercher address
+    $query = sprintf($query,"SELECT Pos_X ,Pos_Y FROM Users_Geo.User_Geo WHERE User_ID = %d",$ID);   // get sercher address
     $result  = $this->_db_throw_query( 'Users_Geo', $query );
     $data = mysqli_fetch_array($result);
 
