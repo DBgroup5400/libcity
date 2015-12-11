@@ -175,7 +175,7 @@ class City extends db{
       if( $result != NULL ){
         while(( $data = mysqli_fetch_assoc($result) ) != NULL){
           $num += 1;
-          $sum += $data['Price'];
+          $sum += $data['Price']/$data['Mount'];
         }
       }
 
@@ -183,7 +183,7 @@ class City extends db{
         $query = sprintf("SELECT * FROM  UXXXXXX WHERE ID = '%s'",$food);
         $result = $this->_db_throw_query( "Users_Geo", $query );
         $data = mysqli_fetch_assoc( $result );
-        $list[$i] = $data["Price"];
+        $list[$i] = $data["Price"]/$data['Mount'];;
       }else{
         $list[$i] = $sum / $num;
       } 
